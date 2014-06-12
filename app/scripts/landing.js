@@ -4,6 +4,15 @@ $(document).ready(function() {
     $(this).text(subText + '!');
   });
 
+  var heroOnHover = function() {
+    $(this).animate({color:'#B27AFF'}, 700);
+  };
+  var heroOffHover = function() {
+    $(this).animate({color:'#FFFFFF'}, 700);
+  };
+
+  $('.hero-content h3').hover(heroOnHover, heroOffHover);
+
   var onHoverAction = function() {
     console.log('Hover action triggered');
     $(this).animate({'margin-top':'10px'})
