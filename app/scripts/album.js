@@ -28,6 +28,8 @@ var albumMarconi = {
   ]
 };
 
+var currentlyPlayingSong = null;
+
 var createSongRow = function(songNumber, songName, songLength) {
   var template =
       '<tr>'
@@ -41,14 +43,38 @@ var createSongRow = function(songNumber, songName, songLength) {
 
   var onHover = function() {
     songNumberCell = $(this).find('.song-number');
-    songNumberCell.html('<a class="album-song-button"><i class="fa fa-play"></i></a>')
+    songNumber = songNumberCell.data('song-number');
+    if (songNumber !== currentlyPlayingSong) {
+      songNumberCell.html('<a class="album-song-button"><i class="fa fa-play"></i></a>');
+    }
   };
+
   var offHover = function() {
     songNumberCell = $(this).find('.song-number');
     songNumber = songNumberCell.data('song-number');
-    songNumberCell.html(songNumber);
+    if (songNumber !== currentlyPlayingSong) {
+      songNumberCell.html(songNumber);
+    };
   };
 
+  var clickHandler = function(event) {
+    songNumber = $(this).data('song-number');
+
+    if (currentlyPlayingSong !== null) {
+      currentlyPlayingCell = $('.song-number[data-song-number="' + currentlyPlayingSong + '"]');
+      currentlyPlayingCell.html(currentlyPlayingSong);
+    }
+
+    if ( currentlyPlayingSong !== songNumber ) {
+      $(this).html('<a class="album-song-button"><i class="fa fa-pause"></i></a>');
+      currentlyPlayingSong = songNumber;
+    } else if (currentlyPlayingSong === songNumber) {
+      $(this).html('<a class="album-song-button"><i class="fa fa-play"></i></a>');
+      currentlyPlayingSong = null;
+    };
+  };
+
+  $row.find('.song-number').click(clickHandler);
   $row.hover(onHover, offHover);
   return $row;
 };
