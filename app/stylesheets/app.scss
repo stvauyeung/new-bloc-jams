@@ -8,10 +8,12 @@ body {
   min-height: 100%;
   background: -webkit-linear-gradient(to bottom, #2b1339, #380c77);
   background: linear-gradient(to bottom, #2b1339, #380c77);
+  padding-bottom: 150px;
 }
 
 body.landing {
   background: #5B5579;
+  padding-bottom: 0px;
 }
 
 body.landing .navbar {
@@ -208,4 +210,41 @@ td.song-number {
   padding: 0;
   height: 70px;
   text-align: center;
+}
+
+.player-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 150px;
+  background: rgba(225, 225, 225, 0.3);
+  z-index: 100;
+}
+
+.player-bar a, .player-bar a:hover {
+  color: white;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.player-bar .container {
+  display: table;
+  padding: 0;
+  min-height: 100%;
+}
+
+.player-bar-control-group {
+  display: table-cell;
+  vertical-align: middle;
+}
+
+.player-bar .left-controls {
+  width: 25%;
+  text-align: left;
+}
+
+.player-bar .right-controls {
+  width: 25%;
+  text-align: right;
 }
