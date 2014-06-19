@@ -131,6 +131,21 @@ var setupSeekBars = function() {
   $seekBars.click(function(event) {
     updateSeekPercentage($(this), event);
   });
+
+  $seekBars.find('.thumb').mousedown(function(event) {
+    var $seekBar = $(this).parent();
+    $seekBar.addClass('no-animate');
+
+    $(document).bind('mousemove.thumb', function(event) {
+      updateSeekPercentage($seekBar, event);
+    });
+
+    $(document).bind('mouseup.thumb', function() {
+      $seekBar.removeClass('no-animate');
+      $(document).unbind('mousemove.thumb');
+      $(document).unbind('mouseup.thumb');
+    });
+  });
 };
 
 if (document.URL.match(/\/album.html/)) {
