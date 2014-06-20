@@ -2,6 +2,8 @@
 @import "album";
 @import "collection";
 @import "player_bar";
+@import "profile";
+@import "buttons";
 
 @mixin linear-gradient($colorOne, $colorTwo) {
   background: -webkit-linear-gradient(to bottom, $colorOne, $colorTwo);
