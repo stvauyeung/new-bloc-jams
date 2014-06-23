@@ -287,13 +287,23 @@ blocJams.config(['$stateProvider', '$locationProvider', function($stateProvider,
     })
     .state('collection', {
       url: '/collection',
-      controller: 'Collection.controller',
-      templateUrl: '/templates/collection.html'
+      views: {
+        "": { 
+          controller: 'Collection.controller', 
+          templateUrl: '/templates/collection.html' 
+        },
+        "playerBar@collection": { templateUrl: '/templates/player_bar.html' }
+      }
     })
     .state('album', {
       url: '/album',
-      templateUrl: '/templates/album.html',
-      controller: 'Album.controller'
+      views: {
+        "": {
+          controller: 'Album.controller',
+          templateUrl: '/templates/album.html'
+        },
+        "playerBar@album": { templateUrl: '/templates/player_bar.html' }
+      }
     });
 }]);
 
