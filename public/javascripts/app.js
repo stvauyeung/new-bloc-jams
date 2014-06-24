@@ -298,7 +298,7 @@ blocJams.config(['$stateProvider', '$locationProvider', function($stateProvider,
 }]);
 
 blocJams
-  .controller('Landing.controller', ['$scope', function($scope) {
+  .controller('Landing.controller', ['$scope', 'ConsoleLogger', function($scope, ConsoleLogger) {
     $scope.subText = "Turn the music up!";
     $scope.subTextClicked = function() {
       $scope.subText += '!';
@@ -315,6 +315,8 @@ blocJams
       '/images/album-placeholders/album-8.jpg',
       '/images/album-placeholders/album-9.jpg',
     ];
+
+    ConsoleLogger.log();
   }])
   .controller('Collection.controller', ['$scope', function($scope) {
     $scope.albums = [];
@@ -322,7 +324,7 @@ blocJams
       $scope.albums.push(angular.copy(albumPicasso));
     };
   }])
-  .controller('Album.controller', ['$scope', 'SongPlayer', function($scope, SongPlayer) {
+  .controller('Album.controller', ['$scope', 'SongPlayer', 'ConsoleLogger', function($scope, SongPlayer, ConsoleLogger) {
     $scope.album = angular.copy(albumPicasso);
 
     var hoveredSong = null;
@@ -352,29 +354,47 @@ blocJams
       }
       return 'default';
     };
+    $scope.userInput = '';
+    $scope.consoleLog = function(input) {
+      ConsoleLogger.setString(input);
+    };
   }])
-  .controller('PlayerBar.controller', ['$scope', 'SongPlayer', function($scope, SongPlayer) {
+  .controller('PlayerBar.controller', ['$scope', 'SongPlayer', 'ConsoleLogger', function($scope, SongPlayer, ConsoleLogger) {
     $scope.songPlayer = SongPlayer;
+    ConsoleLogger.log();
   }]);
 
-  blocJams.service('SongPlayer', function() {
-    return {
-      currentSong: null,
-      currentAlbum: null,
-      playing: false,
+  blocJams
+    .service('SongPlayer', function() {
+      return {
+        currentSong: null,
+        currentAlbum: null,
+        playing: false,
 
-      play: function() {
-        this.playing = true;
-      },
-      pause: function() {
-        this.playing = false;
-      },
-      setSong: function(album, song) {
-        this.currentAlbum = album,
-        this.currentSong = song;
-      }
-    };
-  });
+        play: function() {
+          this.playing = true;
+        },
+        pause: function() {
+          this.playing = false;
+        },
+        setSong: function(album, song) {
+          this.currentAlbum = album,
+          this.currentSong = song;
+        }
+      };
+    })
+    .service('ConsoleLogger', function() {
+      return {
+        logString: '',
+
+        setString: function(newString) {
+          this.logString = newString;
+        },
+        log: function() {
+          console.log(this.logString);
+        }
+      };
+    });
 });
 
 ;require.register("scripts/collection", function(exports, require, module) {
