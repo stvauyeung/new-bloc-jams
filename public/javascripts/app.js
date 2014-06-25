@@ -366,6 +366,10 @@ blocJams
 
   blocJams
     .service('SongPlayer', function() {
+      var trackIndex = function(album, song) {
+        return album.songs.indexOf(song);
+      };
+
       return {
         currentSong: null,
         currentAlbum: null,
@@ -376,6 +380,14 @@ blocJams
         },
         pause: function() {
           this.playing = false;
+        },
+        next: function() {
+          var currentTrackIndex = trackIndex(this.currentAlbum, this.currentSong);
+          currentTrackIndex++;
+          if (currentTrackIndex >= this.currentAlbum.songs.length) {
+            currentTrackIndex = 0;
+          }
+          this.currentSong = this.currentAlbum.songs[currentTrackIndex];
         },
         setSong: function(album, song) {
           this.currentAlbum = album,
