@@ -382,20 +382,26 @@ blocJams
           this.playing = false;
         },
         next: function() {
-          var currentTrackIndex = trackIndex(this.currentAlbum, this.currentSong);
-          currentTrackIndex++;
-          if (currentTrackIndex >= this.currentAlbum.songs.length) {
-            currentTrackIndex = 0;
-          }
-          this.currentSong = this.currentAlbum.songs[currentTrackIndex];
+          if (this.currentSong) {
+            var currentTrackIndex = trackIndex(this.currentAlbum, this.currentSong);
+            currentTrackIndex++;
+            if (currentTrackIndex >= this.currentAlbum.songs.length) {
+              this.currentSong = null;
+              this.playing = false;
+            }
+            this.currentSong = this.currentAlbum.songs[currentTrackIndex];
+          };
         },
         previous: function() {
-          var currentTrackIndex = trackIndex(this.currentAlbum, this.currentSong);
-          currentTrackIndex--;
-          if (currentTrackIndex < 0) {
-            currentTrackIndex = this.currentAlbum.songs.length - 1;
+          if (this.currentSong) {
+            var currentTrackIndex = trackIndex(this.currentAlbum, this.currentSong);
+            currentTrackIndex--;
+            if (currentTrackIndex < 0) {
+              this.currentSong = null;
+              this.playing = false;
+            };
+            this.currentSong = this.currentAlbum.songs[currentTrackIndex];
           };
-          this.currentSong = this.currentAlbum.songs[currentTrackIndex];
         },
         setSong: function(album, song) {
           this.currentAlbum = album,
