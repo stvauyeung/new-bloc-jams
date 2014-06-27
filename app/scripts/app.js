@@ -183,42 +183,71 @@ blocJams
       };
     });
 
-  blocJams.directive('slider', function() {
-    var updateSeekPercentage = function($seekBar, event) {
-      var barWidth = $seekBar.width();
-      var offsetX = event.pageX - $seekBar.offset().left;
+  blocJams
+    .directive('slider', function() {
+      var updateSeekPercentage = function($seekBar, event) {
+        var barWidth = $seekBar.width();
+        var offsetX = event.pageX - $seekBar.offset().left;
 
-      var offsetXPercent = (offsetX  / $seekBar.width()) * 100;
-      offsetXPercent = Math.max(0, offsetXPercent);
-      offsetXPercent = Math.min(100, offsetXPercent);
+        var offsetXPercent = (offsetX  / $seekBar.width()) * 100;
+        offsetXPercent = Math.max(0, offsetXPercent);
+        offsetXPercent = Math.min(100, offsetXPercent);
 
-      var percentageString = offsetXPercent + '%';
-      $seekBar.find('.fill').width(percentageString);
-      $seekBar.find('.thumb').css({left: percentageString});
-    }
-    return {
-      templateUrl: 'templates/directives/slider.html',
-      replace: true,
-      restrict: 'E',
-      link: function(scope, element, attributes) {
-        var $seekBar = $(element);
-        $seekBar.click(function(event) {
-          updateSeekPercentage($seekBar, event);
-        });
-
-        $seekBar.find('.thumb').mousedown(function(event) {
-          $seekBar.addClass('no-animate');
-
-          $(document).bind('mousemove.thumb', function(event) {
+        var percentageString = offsetXPercent + '%';
+        $seekBar.find('.fill').width(percentageString);
+        $seekBar.find('.thumb').css({left: percentageString});
+      }
+      return {
+        templateUrl: 'templates/directives/slider.html',
+        replace: true,
+        restrict: 'E',
+        link: function(scope, element, attributes) {
+          var $seekBar = $(element);
+          $seekBar.click(function(event) {
             updateSeekPercentage($seekBar, event);
           });
 
-          $(document).bind('mouseup.thumb', function() {
-            $seekBar.removeClass('no-animate');
-            $(document).unbind('mousemove.thumb');
-            $(document).unbind('mouseup.thumb');
+          $seekBar.find('.thumb').mousedown(function(event) {
+            $seekBar.addClass('no-animate');
+
+            $(document).bind('mousemove.thumb', function(event) {
+              updateSeekPercentage($seekBar, event);
+            });
+
+            $(document).bind('mouseup.thumb', function() {
+              $seekBar.removeClass('no-animate');
+              $(document).unbind('mousemove.thumb');
+              $(document).unbind('mouseup.thumb');
+            });
           });
-        });
+        }
+      };
+    })
+    .directive('clickMe', function() {
+      return {
+        restrict: 'C',
+        link: function(scope, element) {
+          var $element = $(element);
+          $element.click(function() {
+            alert("element clicked");
+          });
+        }
       }
-    };
-  });
+    })
+    .directive('countHoverTime', function() {
+      var hoverTime = 0;
+      var countHover = function() {
+        window.setInterval(function() { hoverTime++; }, 1000);
+      };
+      var logHover = function() {
+        console.log(hoverTime);
+        hoverTime = 0;
+      };
+      return {
+        restrict: 'C',
+        link: function(scope, element) {
+          var $element = $(element);
+          $element.hover(countHover, logHover);
+        }
+      }
+    });
