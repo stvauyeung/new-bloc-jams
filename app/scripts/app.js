@@ -110,6 +110,14 @@ blocJams
   }])
   .controller('PlayerBar.controller', ['$scope', 'SongPlayer', 'ConsoleLogger', function($scope, SongPlayer, ConsoleLogger) {
     $scope.songPlayer = SongPlayer;
+
+    $scope.volumeClass = function() {
+      return {
+        'fa-volume-off': SongPlayer.volume == 0,
+        'fa-volume-down': SongPlayer.volume <= 70 && SongPlayer.volume > 0,
+        'fa-volume-up': SongPlayer.volume > 70
+      }
+    };
     
     SongPlayer.onTimeUpdate(function(event, time) {
       $scope.$apply(function() {
@@ -129,6 +137,7 @@ blocJams
       currentSong: null,
       currentAlbum: null,
       playing: false,
+      volume: 90,
 
       play: function() {
         this.playing = true;
@@ -166,7 +175,14 @@ blocJams
         }
       },
       onTimeUpdate: function(callback) {
+        // not understanding syntax being passed into $broadcast and $on
         return $rootScope.$on('sound:timeupdate', callback);
+      },
+      setVolume: function(volume) {
+        if (currentSoundFile) {
+          currentSoundFile.setVolume(volume);
+        }
+        this.volume = volume;
       },
       setSong: function(album, song) {
         if (currentSoundFile) {
@@ -179,6 +195,8 @@ blocJams
           formats: ["mp3"],
           preload: true
         });
+
+        currentSoundFile.setVolume(this.volume);
 
         currentSoundFile.bind('timeupdate', function(e) {
           $rootScope.$broadcast('sound:timeupdate', this.getTime());
@@ -201,7 +219,7 @@ blocJams
     };
   });
 
-blocJams.directive('slider', ['$document', function() {
+blocJams.directive('slider', ['$document', function($document) {
 
   var calculateSliderPercentFromMouseEvent = function($slider, event) {
     var offsetX = event.pageX - $slider.offset().left;
@@ -256,6 +274,7 @@ blocJams.directive('slider', ['$document', function() {
 
       var notifyCallback = function(newValue) {
         if (typeof scope.onChange === 'function') {
+          // need to better understand onChange fcn
           scope.onChange({value: newValue});
         };
       };
@@ -276,6 +295,7 @@ blocJams.directive('slider', ['$document', function() {
 
       scope.trackThumb = function() {
         $document.bind('mousemove.thumb', function(event) {
+          var percent = calculateSliderPercentFromMouseEvent($seekBar, event);
           scope.$apply(function() {
             scope.value = percent * scope.max;
             notifyCallback(scope.value);
